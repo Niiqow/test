@@ -1,24 +1,24 @@
 pipeline {
-    agent {
-        node {
-            label 'node'
-        }
+    agent any
+
+    tools {
+        nodejs "node"
     }
+
     stages {
-        stage('Clone Repository') {
+        stage('Install') {
             steps {
-                checkout scm
-            }
-        }
-        stage('Install dependencies') {
-            steps {
+                checkout([$class: 'GitSCM', 
+                    branches: [[name: '*/main']], 
+                    doGenerateSubmoduleConfigurations: false, 
+                    extensions: [], 
+                    submoduleCfg: [], 
+                    userRemoteConfigs: [[credentialsId: '', 
+                    url: 'https://github.com/Niiqow/test.git']]
+                ])
                 sh 'npm install'
-            }
-        }
-        stage('Test') {
-            steps {
-                sh 'npm test'
             }
         }
     }
 }
+
